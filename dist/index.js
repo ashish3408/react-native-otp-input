@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, TouchableWithoutFeedback, Keyboard, Platform, I18nManager, } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Keyboard, I18nManager, } from 'react-native';
 // import Clipboard from '@react-native-community/clipboard';
 import styles from './styles';
 import { isAutoFillSupported } from './helpers/device';
@@ -8,12 +8,6 @@ export default class OTPInputView extends Component {
     constructor(props) {
         super(props);
         this.fields = [];
-        // this.copyCodeFromClipBoardOnAndroid = () => {
-        //     if (Platform.OS === "android") {
-        //         this.checkPinCodeFromClipBoard();
-        //         this.timer = setInterval(this.checkPinCodeFromClipBoard, 400);
-        //     }
-        // };
         this.bringUpKeyBoardIfNeeded = () => {
             const { autoFocusOnLoad, pinCount } = this.props;
             const digits = this.getDigits();
@@ -38,24 +32,6 @@ export default class OTPInputView extends Component {
                 onCodeChanged(code);
             }
         };
-        // this.checkPinCodeFromClipBoard = () => {
-        //     const { pinCount, onCodeFilled } = this.props;
-        //     const regexp = new RegExp(`^\\d{${pinCount}}$`);
-        //     Clipboard.getString().then(code => {
-        //         if (this.hasCheckedClipBoard && regexp.test(code) && (this.clipBoardCode !== code)) {
-        //             this.setState({
-        //                 digits: code.split(""),
-        //             }, () => {
-        //                 this.blurAllFields();
-        //                 this.notifyCodeChanged();
-        //                 onCodeFilled && onCodeFilled(code);
-        //             });
-        //         }
-        //         this.clipBoardCode = code;
-        //         this.hasCheckedClipBoard = true;
-        //     }).catch(() => {
-        //     });
-        // };
         this.handleChangeText = (index, text) => {
             const { onCodeFilled, pinCount } = this.props;
             const digits = this.getDigits();
@@ -125,13 +101,13 @@ export default class OTPInputView extends Component {
             }
         };
         this.renderOneInputField = (_, index) => {
-            const { codeInputFieldStyle, codeInputHighlightStyle, secureTextEntry, editable, keyboardType, selectionColor, keyboardAppearance } = this.props;
+            const { codeInputFieldStyle, codeInputHighlightStyle, secureTextEntry, editable, keyboardType, selectionColor, keyboardAppearance, maxFontSizeMultiplier } = this.props;
             const { defaultTextFieldStyle } = styles;
             const { selectedIndex, digits } = this.state;
             const { clearInputs, placeholderCharacter, placeholderTextColor } = this.props;
             const { color: defaultPlaceholderTextColor } = { ...defaultTextFieldStyle, ...codeInputFieldStyle };
             return (<View pointerEvents="none" key={index + "view"} testID="inputSlotView">
-                <TextInput testID="textInput" underlineColorAndroid='rgba(0,0,0,0)' style={selectedIndex === index ? [defaultTextFieldStyle, codeInputFieldStyle, codeInputHighlightStyle] : [defaultTextFieldStyle, codeInputFieldStyle]} ref={ref => { this.fields[index] = ref; }} onChangeText={text => {
+                <TextInput testID="textInput" maxFontSizeMultiplier={maxFontSizeMultiplier} underlineColorAndroid='rgba(0,0,0,0)' style={selectedIndex === index ? [defaultTextFieldStyle, codeInputFieldStyle, codeInputHighlightStyle] : [defaultTextFieldStyle, codeInputFieldStyle]} ref={ref => { this.fields[index] = ref; }} onChangeText={text => {
                 this.handleChangeText(index, text);
             }} onKeyPress={({ nativeEvent: { key } }) => { this.handleKeyPressTextInput(index, key); }} value={!clearInputs ? digits[index] : ""} keyboardAppearance={keyboardAppearance} keyboardType={keyboardType} textContentType={isAutoFillSupported ? "oneTimeCode" : "none"} key={index} selectionColor={selectionColor} secureTextEntry={secureTextEntry} editable={editable} placeholder={placeholderCharacter} placeholderTextColor={placeholderTextColor || defaultPlaceholderTextColor}/>
             </View>);
