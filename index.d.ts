@@ -86,6 +86,8 @@ declare module '@twotalltotems/react-native-otp-input' {
      * Keyboard appearance. The value can be 'default', 'dark' or 'light'.
      */
     keyboardAppearance?: 'default' | 'dark' | 'light';
+
+    maxFontSizeMultiplier?: number;
   }
 
   export interface OTPInputViewState {
@@ -97,4 +99,3 @@ declare module '@twotalltotems/react-native-otp-input' {
 
   }
 }
-
